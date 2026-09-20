@@ -1,0 +1,71 @@
+<div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2><i class='bx bxs-user-plus'></i> Nuevo Usuario</h2>
+        <p>Crea tu cuenta para acceder</p>
+      </div>
+
+      @if (successMessage()) {
+        <div class="alert alert-success"><i class='bx bx-check-circle'></i> {{ successMessage() }}</div>
+      }
+      @if (errorMessage()) {
+        <div class="alert alert-danger"><i class='bx bx-error-circle'></i> {{ errorMessage() }}</div>
+      }
+      
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+        
+        <div class="form-group">
+          <label>Usuario</label>
+          <div class="input-wrapper">
+            <i class='bx bxs-user'></i>
+            <input type="text" formControlName="username" placeholder="Ej: luisbarajas">
+          </div>
+          @if (f['username'].touched && f['username'].invalid) {
+            <div class="error-text">
+              @if (f['username'].errors?.['required']) { <small>El usuario es requerido.</small> }
+              @if (f['username'].errors?.['minlength']) { <small>Mínimo 4 caracteres.</small> }
+              @if (f['username'].errors?.['pattern']) { <small>Solo se permiten letras y números (sin espacios).</small> }
+            </div>
+          }
+        </div>
+  
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <div class="input-wrapper">
+            <i class='bx bxs-envelope'></i>
+            <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
+          </div>
+          @if (f['email'].touched && f['email'].invalid) {
+            <div class="error-text">
+              @if (f['email'].errors?.['required']) { <small>El correo es requerido.</small> }
+              @if (f['email'].errors?.['email']) { <small>Formato de correo inválido.</small> }
+            </div>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-wrapper">
+            <i class='bx bxs-lock-alt'></i>
+            <input type="password" formControlName="password" placeholder="••••••••">
+          </div>
+          @if (f['password'].touched && f['password'].invalid) {
+            <div class="error-text">
+              @if (f['password'].errors?.['required']) { <small>La contraseña es requerida.</small> }
+              @if (f['password'].errors?.['minlength'] || f['password'].errors?.['pattern']) { 
+                <small>Debe tener mín. 8 caracteres, 1 mayúscula y 1 número.</small> 
+              }
+            </div>
+          }
+        </div>
+        
+        <button type="submit" class="login-btn">
+          Registrarse
+        </button>
+  
+        <div style="text-align: center; margin-top: 15px;">
+          <a routerLink="/login" style="color: #38bdf8; text-decoration: none; font-size: 14px;">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+      </form>
+    </div>
+  </div>

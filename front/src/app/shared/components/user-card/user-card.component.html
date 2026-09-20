@@ -1,0 +1,14 @@
+<div class="user-welcome-card">
+    <div class="avatar-section" [ngClass]="isRoleAdmin ? 'admin-theme' : 'candidate-theme'">
+      <i class='bx' [ngClass]="isRoleAdmin ? 'bxs-crown' : 'bxs-user'"></i>
+    </div>
+    <div class="info-section">
+      <h2>¡Hola, <strong>{{ username }}</strong>!</h2>
+      <p>
+        <span class="role-badge" [ngClass]="isRoleAdmin ? 'badge-admin' : 'badge-candidate'">
+          {{ isRoleAdmin ? 'Administrador' : 'Candidato' }}
+        </span>
+        <span class="email-text">Bienvenido a tu panel de control.</span>
+      </p>
+    </div>
+  </div>

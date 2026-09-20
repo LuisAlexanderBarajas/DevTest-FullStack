@@ -1,0 +1,66 @@
+ <div class="layout-container">
+    <!-- Sidebar Lateral -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class='bx bx-code'></i> DevTest</h2>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <!-- ADMINISTRADOR -->
+        @if (isAdmin) {
+          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+            <i class='bx bxs-dashboard'></i> Dashboard
+          </a>
+          <a routerLink="/admin/management" routerLinkActive="active" class="nav-item">
+            <i class='bx bxs-folder-open'></i> Gestionar Evaluaciones
+          </a>
+          <a routerLink="/admin/podium" routerLinkActive="active" class="nav-item">
+            <i class='bx bxs-award'></i> Podio y Resultados
+          </a>
+        }
+    
+        <!-- CANDIDATO -->
+        @if (!isAdmin) {
+          <a routerLink="/candidate/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+            <i class='bx bxs-dashboard'></i> Mi Panel
+          </a>
+          <a routerLink="/candidate/assessments" routerLinkActive="active" class="nav-item">
+            <i class='bx bxs-book-content'></i> Evaluaciones Disponibles
+          </a>
+        }
+      </nav>
+  
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <span class="user-avatar">{{ userInitial }}</span>
+          <span class="user-name">{{ currentUsername }}</span>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          <i class='bx bx-log-out'></i> Salir
+        </button>
+      </div>
+    </aside>
+  
+    <!-- Contenido Principal -->
+    <main class="main-content">
+      
+      <!-- topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          @if (showBackButton()) {
+            <button class="btn-back" (click)="goBack()" title="Volver a la página anterior">
+              <i class='bx bx-left-arrow-alt'></i>
+            </button>
+          }
+          <h2 class="page-title">{{ pageTitle() }}</h2>
+        </div>
+        
+        <div class="topbar-right">
+        </div>
+      </header>
+      
+      <div class="content-area">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>

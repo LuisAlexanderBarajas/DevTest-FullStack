@@ -1,0 +1,160 @@
+.dashboard-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 30px;
+    color: #1e293b;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .dashboard-header p {
+    color: #64748b;
+    margin-top: 5px;
+  }
+  
+  .loading-state, .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+    font-size: 16px;
+  }
+  
+  /* Grid de Tarjetas */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  
+  .assessment-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .assessment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card-header {
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-header h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 18px;
+  }
+  
+  .card-body {
+    padding: 20px;
+    flex-grow: 1;
+  }
+  
+  .description {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+  
+  .badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .badge {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+  }
+  
+  .card-footer {
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  /* Botones de acción dinámicos según estado */
+  .btn-action {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+    color: white;
+  }
+  
+  .btn-start {
+    background-color: #2563eb;
+  }
+  .btn-start:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .btn-progress {
+    background-color: #d97706;
+  }
+  .btn-progress:hover {
+    background-color: #b45309;
+  }
+  
+  .btn-completed {
+    background-color: #059669;
+  }
+  .btn-completed:hover {
+    background-color: #047857;
+  }
+  
+  /* Badges de Estado */
+  .status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .badge-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .badge-progress {
+    background-color: #fef3c7;
+    color: #92400e;
+  }

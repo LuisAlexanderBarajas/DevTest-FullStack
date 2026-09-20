@@ -1,0 +1,50 @@
+<div class="result-container">
+    @if (isLoading) {
+      <div class="loader-card">
+        <p>Calculando y cargando resultados...</p>
+      </div>
+    } @else if (errorMessage) {
+      <div class="error-card">
+        <i class='bx bxs-error-circle'></i>
+        <p>{{ errorMessage }}</p>
+        <button class="btn-primary" (click)="goBack()">Volver al Panel</button>
+      </div>
+    } @else {
+      <div class="result-card">
+        <div class="result-header">
+          <i class='bx bxs-check-shield success-icon'></i>
+          <h2>¡Evaluación Completada!</h2>
+          <p>Has finalizado exitosamente el proceso técnico.</p>
+        </div>
+  
+        <div class="score-section">
+            <div class="score-circle">
+                <span class="score-number">{{ resultData?.totalScore || 0 }}</span>
+                <span class="score-max">/ {{ resultData?.maxScore || 100 }}</span>
+            </div>
+            <p class="score-label">Puntaje Final Obtenido</p>
+        </div>
+  
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="label">Estado:</span>
+            <span class="value badge-success">Completado</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Preguntas Aprobadas:</span>
+            <span class="value">{{ resultData?.passedQuestions || 0 }} / {{ resultData?.totalQuestions || 0 }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Tiempo Empleado:</span>
+            <span class="value">{{ resultData?.timeSpent || 'N/A' }}</span>
+          </div>
+        </div>
+  
+        <div class="actions-section">
+          <button class="btn-primary" (click)="goBack()">
+            <i class='bx bx-home-alt'></i> Regresar al Panel
+          </button>
+        </div>
+      </div>
+    }
+  </div>

@@ -1,0 +1,79 @@
+<div class="solve-layout">
+    <aside class="problem-panel">
+      
+      @if (assessmentData && questions.length > 0) {
+        <div class="header-info">
+          <span class="badge time"><i class='bx bx-timer'></i> {{ formattedTime() }} restantes</span>
+          <span class="badge score"><i class='bx bx-trophy'></i> {{ questions[currentIndex()].score }} pts</span>
+        </div>
+        
+        <h3 class="assessment-title">{{ assessmentData.name }}</h3>
+        <h2 class="question-title">Pregunta {{ currentIndex() + 1 }}: {{ questions[currentIndex()].title }}</h2>
+        
+        <p class="description">{{ questions[currentIndex()].description }}</p>
+        
+        <h4 class="examples-title">Ejemplos</h4>
+        @for (tc of questions[currentIndex()].testCases; track $index) {
+          @if (!tc.isHidden) {
+            <div class="example-box">
+              <strong>Entrada:</strong>
+              <pre>{{ tc.inputData }}</pre>
+              <strong>Salida Esperada:</strong>
+              <pre>{{ tc.expectedOutput }}</pre>
+            </div>
+          }
+        }
+
+        <div class="question-navigation">
+          <button class="btn-nav" 
+                  [disabled]="currentIndex() === 0" 
+                  (click)="changeQuestion(-1)">
+            <i class='bx bx-chevron-left'></i> Anterior
+          </button>
+          
+          <span class="question-counter">{{ currentIndex() + 1 }} de {{ questions.length }}</span>
+          
+          <button class="btn-nav" 
+                  [disabled]="currentIndex() === questions.length - 1" 
+                  (click)="changeQuestion(1)">
+            Siguiente <i class='bx bx-chevron-right'></i>
+          </button>
+        </div>
+        <div class="submit-section" style="margin-top: 20px; text-align: center;">
+          <button class="btn-run" style="width: 100%; justify-content: center; background: #0ea5e9;" (click)="submitAssessment()">
+            <i class='bx bx-check-double'></i> Terminar y Enviar
+          </button>
+       </div>
+
+      } @else {
+        <p>Cargando evaluación...</p>
+      }
+    </aside>
+  
+    <main class="editor-panel">
+      <div class="toolbar">
+        <select class="lang-selector" [value]="selectedLanguage()" (change)="onLanguageChange($event)">
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript (Node.js)</option>
+          <option value="python">Python 3</option>
+        </select>
+  
+        <button class="btn-run" [disabled]="isExecuting()" (click)="executeCode()">
+          @if (isExecuting()) {
+            <i class='bx bx-loader-alt bx-spin'></i> Ejecutando...
+          } @else {
+            <i class='bx bx-play'></i> Ejecutar Código
+          }
+        </button>
+      </div>
+  
+      <div class="monaco-container">
+        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" style="height: 100%; display: block;"></ngx-monaco-editor>
+        </div>
+  
+      <div class="console-panel">
+        <div class="console-header">Consola de Salida</div>
+        <pre class="console-body">{{ consoleOutput() }}</pre>
+      </div>
+    </main>
+  </div>

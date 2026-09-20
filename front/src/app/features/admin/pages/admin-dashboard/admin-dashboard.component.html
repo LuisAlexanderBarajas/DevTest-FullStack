@@ -1,0 +1,20 @@
+<div class="admin-container">
+    <app-user-card></app-user-card>
+  
+    <section class="kpi-banner">
+      <div class="kpi-card">
+        <div class="kpi-icon"><i class='bx bxs-file-doc'></i></div>
+        <div class="kpi-info">
+          <h4>Evaluaciones Activas</h4>
+          <p>{{ assessments().length }}</p>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><i class='bx bxs-trophy'></i></div>
+        <div class="kpi-info">
+          <h4>Candidatos Evaluados</h4>
+          <p>{{ podiumList().length }}</p>
+        </div>
+      </div>
+    </section>
+  </div>

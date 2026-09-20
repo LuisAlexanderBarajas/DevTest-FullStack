@@ -1,0 +1,128 @@
+.result-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background-color: #f8fafc;
+  }
+  
+  .result-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    border-top: 5px solid #10b981; /* Verde éxito */
+  }
+  
+  .success-icon {
+    font-size: 64px;
+    color: #10b981;
+    margin-bottom: 15px;
+  }
+  
+  .result-header h2 {
+    font-size: 24px;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+  
+  .result-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  
+  .score-section {
+    background: #f1f5f9;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+  }
+  
+  .score-circle {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    color: #0f172a;
+  }
+  
+  .score-number {
+    font-size: 48px;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  
+  .score-max {
+    font-size: 20px;
+    color: #64748b;
+    margin-left: 4px;
+  }
+  
+  .score-label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+    text-align: left;
+    background: #f8fafc;
+    padding: 15px 20px;
+    border-radius: 8px;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .detail-item .label {
+    color: #64748b;
+  }
+  
+  .detail-item .value {
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  .badge-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  
+  .btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+  }

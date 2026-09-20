@@ -1,0 +1,60 @@
+<div class="admin-container">
+    <section class="admin-section">
+      <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h3><i class='bx bxs-award'></i> Podio y Rendimiento de Candidatos</h3>
+        
+        <div class="filter-container" style="display: flex; align-items: center; gap: 10px;">
+          <label for="assessmentFilter" style="font-weight: 600; color: #475569;">Evaluación:</label>
+          <select id="assessmentFilter" (change)="onAssessmentChange($event)" 
+                  style="padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: white; outline: none;">
+            @for (assessment of assessments(); track assessment.id) {
+              <option [value]="assessment.id">{{ assessment.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+  
+      <div class="table-responsive">
+        @if (isLoading()) {
+          <div style="padding: 40px; text-align: center; color: #64748b;">
+            <i class='bx bx-loader-alt bx-spin' style="font-size: 24px;"></i> Cargando resultados...
+          </div>
+        } @else {
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Posición</th>
+                <th>Candidato</th>
+                <th>Evaluación Presentada</th>
+                <th>Puntaje Total</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (podium of podiumList(); track podium.id; let idx = $index) {
+                <tr>
+                  <td>
+                    <span class="rank-badge" [ngClass]="{'gold': idx === 0, 'silver': idx === 1, 'bronze': idx === 2}">
+                      {{ idx + 1 }}
+                    </span>
+                  </td>
+                  <td><strong>{{ podium.user?.username }}</strong></td>
+                  <td>{{ podium.assessment?.name }}</td>
+                  <td><span class="score-pill">{{ podium.totalScore }} pts</span></td>
+                  <td><span class="status-badge" [class.completed]="podium.status === 'COMPLETED'">{{ podium.status }}</span></td>
+                  <td>{{ podium.submittedAt | date:'short' }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="empty-row" style="text-align: center; padding: 30px; color: #64748b;">
+                    Aún no hay candidatos que hayan completado esta evaluación.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </section>
+  </div>

@@ -1,0 +1,67 @@
+.user-welcome-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    gap: 20px;
+  }
+  
+  .avatar-section {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+  }
+  
+  .admin-theme {
+    background-color: #eff6ff;
+    color: #3b82f6;
+  }
+  
+  .candidate-theme {
+    background-color: #f0fdf4;
+    color: #22c55e;
+  }
+  
+  .info-section h2 {
+    margin: 0 0 8px 0;
+    font-size: 22px;
+    color: #1e293b;
+    font-weight: 500;
+  }
+  
+  .info-section p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  
+  .role-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  
+  .badge-admin {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .badge-candidate {
+    background-color: #22c55e;
+    color: white;
+  }
+  
+  .email-text {
+    color: #64748b;
+  }

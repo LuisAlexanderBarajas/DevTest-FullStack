@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h2><i class='bx bx-book-content'></i> Evaluaciones Técnicas Disponibles</h2>
+    <p>Selecciona una prueba para iniciar o continuar tu proceso de evaluación.</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <i class='bx bx-loader-alt bx-spin'></i> Cargando pruebas...
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (assessment of assessments(); track assessment.id) {
+        <div class="assessment-card" [ngClass]="{'card-completed': assessment.status === 'COMPLETED'}">
+          <div class="card-header">
+            <h3>{{ assessment.name }}</h3>
+            @if (assessment.status === 'COMPLETED') {
+              <span class="status-badge badge-completed">Completado</span>
+            } @else if (assessment.status === 'IN_PROGRESS') {
+              <span class="status-badge badge-progress">En Progreso</span>
+            }
+          </div>
+
+          <div class="card-body">
+            <p class="description">{{ assessment.description }}</p>
+            <div class="badges">
+              <span class="badge"><i class='bx bx-time'></i> {{ assessment.timeLimitMinutes }} min</span>
+              <span class="badge"><i class='bx bx-list-ol'></i> {{ assessment.questionCount }} preguntas</span>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button 
+              class="btn-action" 
+              [ngClass]="{
+                'btn-completed': assessment.status === 'COMPLETED',
+                'btn-progress': assessment.status === 'IN_PROGRESS',
+                'btn-start': assessment.status === 'NOT_STARTED' || !assessment.status
+              }"
+              (click)="handleAssessmentAction(assessment)">
+              
+              @if (assessment.status === 'COMPLETED') {
+                <i class='bx bxs-check-shield'></i> Ver Resultados
+              } @else if (assessment.status === 'IN_PROGRESS') {
+                <i class='bx bx-play-circle'></i> Continuar Prueba
+              } @else {
+                <i class='bx bx-right-arrow-alt'></i> Iniciar Prueba
+              }
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          No hay evaluaciones disponibles en este momento.
+        </div>
+      }
+    </div>
+  }
+</div>

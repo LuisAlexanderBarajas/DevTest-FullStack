@@ -1,0 +1,163 @@
+<div class="create-container">
+  <header class="create-header">
+    <h2><i class='bx' [ngClass]="isEditMode() ? 'bx-edit' : 'bx-plus-circle'"></i> 
+      {{ isEditMode() ? 'Editar Evaluación Técnica' : 'Crear Nueva Evaluación Técnica' }}
+    </h2>
+    <p>Configure los parámetros generales, las preguntas de código y sus casos de prueba asociados.</p>
+  </header>
+
+  <form [formGroup]="formService.form" (ngSubmit)="onSubmit()" class="assessment-form">
+    <!-- Información General -->
+    <section class="form-section">
+      <h3>Información General</h3>
+      
+      <div class="form-group">
+        <label>Nombre de la Evaluación</label>
+        <input type="text" formControlName="name" placeholder="Ej. Backend Developer Assessment"
+               [ngClass]="{'input-error': formService.form.get('name')?.invalid && formService.form.get('name')?.touched}">
+        @if (formService.form.get('name')?.invalid && formService.form.get('name')?.touched) {
+          <small class="error-msg">El nombre es requerido (mín. 5 caracteres).</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea formControlName="description" rows="3" placeholder="Breve descripción de la prueba..."
+                  [ngClass]="{'input-error': formService.form.get('description')?.invalid && formService.form.get('description')?.touched}"></textarea>
+        @if (formService.form.get('description')?.invalid && formService.form.get('description')?.touched) {
+          <small class="error-msg">La descripción es requerida (mín. 10 caracteres).</small>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tiempo Límite (Minutos)</label>
+          <input type="number" formControlName="timeLimitMinutes"
+                 [ngClass]="{'input-error': formService.form.get('timeLimitMinutes')?.invalid && formService.form.get('timeLimitMinutes')?.touched}">
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Preguntas -->
+    <section class="form-section">
+      <div class="section-header-row">
+        <h3>Preguntas y Ejercicios</h3>
+        <button type="button" class="btn-secondary" (click)="formService.addQuestion()">
+          <i class='bx bx-plus'></i> Agregar Pregunta
+        </button>
+      </div>
+      
+      @if (formService.questions.length === 0) {
+        <small class="error-msg text-center d-block mb-3">Debe agregar al menos una pregunta.</small>
+      }
+
+      <div formArrayName="questions">
+        @for (question of formService.questions.controls; track $index; let qIndex = $index) {
+          <div [formGroupName]="qIndex" class="question-card">
+            <div class="question-header">
+              <h4>Pregunta #{{ qIndex + 1 }}</h4>
+              <button type="button" class="btn-danger-icon" (click)="formService.removeQuestion(qIndex)">
+                <i class='bx bx-trash'></i>
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label>Título del Ejercicio</label>
+              <input type="text" formControlName="title" placeholder="Ej. Invertir una Cadena"
+                     [ngClass]="{'input-error': question.get('title')?.invalid && question.get('title')?.touched}">
+              @if (question.get('title')?.invalid && question.get('title')?.touched) {
+                 <small class="error-msg">El título es requerido (mín. 5 caracteres).</small>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Descripción del Problema</label>
+              <textarea formControlName="description" rows="2" placeholder="Explique qué debe hacer el código..."
+                        [ngClass]="{'input-error': question.get('description')?.invalid && question.get('description')?.touched}"></textarea>
+              @if (question.get('description')?.invalid && question.get('description')?.touched) {
+                 <small class="error-msg">La descripción es obligatoria.</small>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Lenguajes Permitidos</label>
+                <!-- Selector Visual de Etiquetas -->
+                <div class="language-tags">
+                  @for (lang of formService.availableLanguages; track lang) {
+                    <button type="button" class="lang-tag" 
+                            [class.active]="formService.hasLanguage(qIndex, lang)"
+                            (click)="formService.toggleLanguage(qIndex, lang)">
+                      {{ lang }}
+                    </button>
+                  }
+                </div>
+                <!-- Input oculto para conectar con el FormGroup sin que se vea -->
+                <input type="hidden" formControlName="allowedLanguages">
+                
+                @if (question.get('allowedLanguages')?.value === '') {
+                  <small class="error-msg">Seleccione al menos un lenguaje.</small>
+                }
+              </div>
+              <div class="form-group">
+                <label>Puntaje</label>
+                <input type="number" formControlName="score"
+                       [ngClass]="{'input-error': question.get('score')?.invalid && question.get('score')?.touched}">
+              </div>
+            </div>
+
+            <!-- Casos de Prueba -->
+            <div class="test-cases-container">
+              <div class="section-header-row">
+                <h5>Casos de Prueba</h5>
+                <button type="button" class="btn-small" (click)="formService.addTestCase(qIndex)">
+                  <i class='bx bx-plus'></i> Caso de Prueba
+                </button>
+              </div>
+
+              @if (formService.getTestCases(qIndex).length === 0) {
+                <small class="error-msg">Agregue al menos un caso de prueba.</small>
+              }
+
+              <div formArrayName="testCases">
+                @for (tc of formService.getTestCases(qIndex).controls; track $index; let tcIndex = $index) {
+                  <div [formGroupName]="tcIndex" class="test-case-row">
+                    <div class="form-group">
+                      <label>Entrada (Standard Input)</label>
+                      <textarea formControlName="inputData" rows="3" placeholder="Ej. 5\n10 (Usa saltos de línea)"
+                                [ngClass]="{'input-error': tc.get('inputData')?.invalid && tc.get('inputData')?.touched}"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label>Salida Esperada (Standard Output)</label>
+                      <textarea formControlName="expectedOutput" rows="3" placeholder="Ej. 15"
+                                [ngClass]="{'input-error': tc.get('expectedOutput')?.invalid && tc.get('expectedOutput')?.touched}"></textarea>
+                    </div>
+                    <div class="form-group checkbox-group">
+                      <label>
+                        <input type="checkbox" formControlName="isHidden"> Oculto
+                      </label>
+                    </div>
+                    <button type="button" class="btn-trash" (click)="formService.removeTestCase(qIndex, tcIndex)">
+                      <i class='bx bx-x'></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <!-- Botón dinámico deshabilitado si el formulario es inválido -->
+      <button type="submit" class="btn-primary" [disabled]="formService.form.invalid || formService.questions.length === 0 || isSubmitting()">
+        @if (isSubmitting()) {
+          <i class='bx bx-loader-alt bx-spin'></i> Guardando...
+        } @else {
+          <i class='bx bx-save'></i> {{ isEditMode() ? 'Actualizar Evaluación' : 'Guardar Evaluación Completa' }}
+        }
+      </button>
+    </div>
+  </form>
+</div>
