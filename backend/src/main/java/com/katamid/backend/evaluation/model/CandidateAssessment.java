@@ -23,13 +23,11 @@ public class CandidateAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación con el usuario (candidato) que presenta la prueba
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Relación con la evaluación que se está presentando
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assessment_id", nullable = false)
     private Assessment assessment;
 
