@@ -41,7 +41,7 @@ class CodeExecutionServiceTest {
 
         try (MockedConstruction<ProcessBuilder> mockedProcessBuilder = mockConstruction(ProcessBuilder.class, (mock, context) -> {
             Process mockProcess = mock(Process.class);
-            when(mockProcess.waitFor(5, TimeUnit.SECONDS)).thenReturn(true);
+            when(mockProcess.waitFor(30, TimeUnit.SECONDS)).thenReturn(true);
 
             InputStream mockInputStream = new ByteArrayInputStream("Ejecucion exitosa".getBytes());
             when(mockProcess.getInputStream()).thenReturn(mockInputStream);
