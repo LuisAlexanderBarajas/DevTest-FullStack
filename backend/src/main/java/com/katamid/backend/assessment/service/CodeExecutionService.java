@@ -3,6 +3,7 @@ package com.katamid.backend.assessment.service;
 import com.katamid.backend.assessment.service.strategy.CodeExecutorFactory;
 import com.katamid.backend.assessment.service.strategy.CodeExecutorStrategy;
 import org.springframework.stereotype.Service;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.UUID;
@@ -11,25 +12,42 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CodeExecutionService {
 
-    private static final String BASE_TEMP_DIR = System.getProperty("user.dir") + "/temp_executions";
-
     private final CodeExecutorFactory executorFactory;
+    private final String baseTempDir;
+    private final boolean isDockerized;
 
     public CodeExecutionService(CodeExecutorFactory executorFactory) {
         this.executorFactory = executorFactory;
+
+        if (System.getenv("DOCKER_MODE") != null) {
+            this.baseTempDir = "/app/temp_executions";
+            this.isDockerized = true;
+        } else {
+            this.baseTempDir = System.getProperty("user.dir") + "/temp_executions";
+            this.isDockerized = false;
+        }
     }
 
     public String executeTest(String code, String language, String input) {
         String executionId = UUID.randomUUID().toString();
-        Path tempDirPath = Paths.get(BASE_TEMP_DIR, executionId);
+        Path tempDirPath = Paths.get(baseTempDir, executionId);
 
         try {
             Files.createDirectories(tempDirPath);
-
             CodeExecutorStrategy strategy = executorFactory.getStrategy(language);
 
             Files.writeString(tempDirPath.resolve(strategy.getFileName()), code);
             Files.writeString(tempDirPath.resolve("input.txt"), input != null ? input : "");
+
+            String volumeMapping;
+            String workDir;
+            if (isDockerized) {
+                volumeMapping = "code_executions:/app/temp_executions";
+                workDir = "/app/temp_executions/" + executionId;
+            } else {
+                volumeMapping = tempDirPath.toAbsolutePath().toString().replace("\\", "/") + ":/app";
+                workDir = "/app";
+            }
 
             String[] dockerCommand = {
                     "docker", "run", "--rm",
@@ -37,8 +55,8 @@ public class CodeExecutionService {
                     "--memory=256m",
                     "--cpus=0.5",
                     "--network", "none",
-                    "-v", tempDirPath.toAbsolutePath().toString().replace("\\", "/") + ":/app",
-                    "-w", "/app",
+                    "-v", volumeMapping,
+                    "-w", workDir,
                     strategy.getDockerImage(),
                     "sh", "-c", strategy.getRunCommand() + " < input.txt"
             };
@@ -47,17 +65,13 @@ public class CodeExecutionService {
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
-            boolean finished = process.waitFor(5, TimeUnit.SECONDS);
+            boolean finished = process.waitFor(30, TimeUnit.SECONDS);
 
             if (!finished) {
                 process.destroyForcibly();
-
                 try {
                     Runtime.getRuntime().exec("docker kill " + executionId);
-                } catch (Exception e) {
-                    System.err.println("Error al matar el contenedor zombi: " + e.getMessage());
-                }
-
+                } catch (Exception e) {}
                 return "Error: Tiempo límite de ejecución excedido (Timeout).";
             }
 
