@@ -65,7 +65,7 @@ public class CodeExecutionService {
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
-            boolean finished = process.waitFor(30, TimeUnit.SECONDS);
+            boolean finished = process.waitFor(5, TimeUnit.SECONDS);
 
             if (!finished) {
                 process.destroyForcibly();
