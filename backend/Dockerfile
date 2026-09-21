@@ -7,5 +7,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:23-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+RUN apk add --no-cache docker-cli
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

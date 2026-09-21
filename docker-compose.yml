@@ -26,9 +26,10 @@ services:
       - DB_URL=jdbc:mysql://mysqldb:3306/mid_challenge_db?serverTimezone=UTC
       - DB_USERNAME=root
       - DB_PASSWORD=admin
+      - DOCKER_MODE=true 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./backend/temp_executions:/app/temp_executions
+      - code_executions:/app/temp_executions
     depends_on:
       mysqldb:
         condition: service_healthy
@@ -42,5 +43,37 @@ services:
     depends_on:
       - backend
 
+  # entornos (Sandbox)
+  java-warmer:
+    image: eclipse-temurin:17-jdk-alpine
+    container_name: devtest-java-warmer
+    command: ["echo", "Imagen de Java lista"]
+
+  python-warmer:
+    image: python:3.9-slim
+    container_name: devtest-python-warmer
+    command: ["echo", "Imagen de Python lista"]
+
+  js-warmer:
+    image: node:18-alpine
+    container_name: devtest-js-warmer
+    command: ["echo", "Imagen de JavaScript lista"]
+
+  ts-warmer:
+    image: denoland/deno:alpine
+    container_name: devtest-ts-warmer
+    command: ["echo", "Imagen de TypeScript lista"]
+  
+  # cobol
+  cobol-builder:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.cobol
+    image: devtest-cobol
+    container_name: devtest-cobol-builder
+    command: ["echo", "Imagen COBOL lista para usarse"]
+
 volumes:
   db_data:
+  code_executions:
+    name: code_executions
