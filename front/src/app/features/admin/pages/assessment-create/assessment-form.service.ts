@@ -8,7 +8,7 @@ export class AssessmentFormService {
   private fb = inject(FormBuilder);
 
   // Lista global de lenguajes permitidos para los tags
-  readonly availableLanguages = ['JAVA', 'JAVASCRIPT', 'PYTHON', 'C++', 'C#'];
+  readonly availableLanguages = ['JAVA', 'JAVASCRIPT', 'PYTHON', 'TYPESCRIPT', 'COBOL'];
 
   form: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(5)]],
@@ -32,7 +32,7 @@ export class AssessmentFormService {
       id: [null],
       title: ['', [Validators.required, Validators.minLength(5)]],
       description: ['', [Validators.required]],
-      allowedLanguages: ['JAVA,JAVASCRIPT,PYTHON', Validators.required],
+      allowedLanguages: ['JAVA,JAVASCRIPT,PYTHON,TYPESCRIPT,COBOL', Validators.required],
       score: [100, [Validators.required, Validators.min(1)]],
       testCases: this.fb.array([], [Validators.required])
     });

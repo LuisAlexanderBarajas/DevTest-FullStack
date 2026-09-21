@@ -52,10 +52,10 @@
   
     <main class="editor-panel">
       <div class="toolbar">
-        <select class="lang-selector" [value]="selectedLanguage()" (change)="onLanguageChange($event)">
-          <option value="java">Java</option>
-          <option value="javascript">JavaScript (Node.js)</option>
-          <option value="python">Python 3</option>
+        <select (change)="onLanguageChange($event)" class="lang-selector" [value]="selectedLanguage()">
+          @for (lang of availableLanguagesForQuestion(); track lang) {
+            <option [value]="lang">{{ lang.toUpperCase() }}</option>
+          }
         </select>
   
         <button class="btn-run" [disabled]="isExecuting()" (click)="executeCode()">

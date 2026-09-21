@@ -35,6 +35,8 @@ export class AssessmentSolveComponent implements OnInit {
   consoleOutput = signal<string>('Esperando ejecución...');
   code: string = '';
 
+  availableLanguagesForQuestion = signal<string[]>([]);
+
   editorOptions = { theme: 'vs-dark', language: 'java', minimap: { enabled: false } };
 
   // diccionario para guardar elc odigo
@@ -69,10 +71,19 @@ export class AssessmentSolveComponent implements OnInit {
         this.questions = attempt.assessment.questions || [];
         
         if (this.questions.length > 0) {
-          this.setSnippetForLanguage('java');
+          this.setSnippetForLanguage('java')
+          this.updateAvailableLanguages();
+
 
           // Calculo del tiempo restante
-          const startedAtTime = new Date(attempt.startedAt).getTime();
+          let dateString = attempt.startedAt;
+          if (dateString.includes(' ')) {
+            dateString = dateString.replace(' ', 'T');
+          }
+          if (!dateString.endsWith('Z')) {
+            dateString += 'Z';
+          }
+          const startedAtTime = new Date(dateString).getTime();
           const timeLimitMs = (this.assessmentData.timeLimitMinutes || 30) * 60 * 1000;
           const expirationTime = startedAtTime + timeLimitMs;
           const now = new Date().getTime();
@@ -147,6 +158,7 @@ export class AssessmentSolveComponent implements OnInit {
     this.codeDrafts.set(currentQId, this.code);
 
     this.currentIndex.update(index => index + step);
+    this.updateAvailableLanguages();
 
     const newQId = this.questions[this.currentIndex()].id;
     if (this.codeDrafts.has(newQId)) {
@@ -163,7 +175,8 @@ export class AssessmentSolveComponent implements OnInit {
   onLanguageChange(event: any) {
     const lang = event.target.value;
     this.selectedLanguage.set(lang);
-    this.editorOptions = { ...this.editorOptions, language: lang };
+    const monacoLang = lang === 'cobol' ? 'plaintext' : lang;
+    this.editorOptions = { ...this.editorOptions, language: monacoLang };
     
     this.setSnippetForLanguage(lang);
   }
@@ -172,6 +185,8 @@ export class AssessmentSolveComponent implements OnInit {
     if (lang === 'java') this.code = 'public class Main {\n    public static void main(String[] args) {\n        // Tu código aquí\n    }\n}';
     if (lang === 'javascript') this.code = 'function solve() {\n    // Tu código aquí\n}\nsolve();';
     if (lang === 'python') this.code = 'def solve():\n    # Tu código aquí\n    pass\n\nsolve()';
+    if (lang === 'typescript') this.code = 'function solve(): void {\n    // Tu código aquí\n}\nsolve();';
+    if (lang === 'cobol') this.code = '       IDENTIFICATION DIVISION.\n       PROGRAM-ID. MAIN.\n       PROCEDURE DIVISION.\n           DISPLAY "Hola COBOL".\n           STOP RUN.\n';
   }
 
   executeCode() {
@@ -288,5 +303,24 @@ export class AssessmentSolveComponent implements OnInit {
       }
     });
   }
+
+  updateAvailableLanguages() {
+    const activeQ = this.questions[this.currentIndex()];
+    if (activeQ && activeQ.allowedLanguages) {
+      const langs = activeQ.allowedLanguages.toLowerCase().split(',');
+      this.availableLanguagesForQuestion.set(langs);
+
+      if (!langs.includes(this.selectedLanguage())) {
+        const fallbackLang = langs[0];
+        this.selectedLanguage.set(fallbackLang);
+        
+        const monacoLang = fallbackLang === 'cobol' ? 'plaintext' : fallbackLang;
+        this.editorOptions = { ...this.editorOptions, language: monacoLang };
+
+        this.setSnippetForLanguage(fallbackLang);
+      }
+    }
+  }
+
 
 }
