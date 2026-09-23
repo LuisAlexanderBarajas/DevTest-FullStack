@@ -12,6 +12,7 @@ import com.katamid.backend.evaluation.model.CandidateAnswer;
 import com.katamid.backend.evaluation.repository.CandidateAssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.ZoneId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,7 +44,7 @@ public class EvaluationService {
         attempt.setUser(user);
         attempt.setAssessment(assessment);
         attempt.setStatus("IN_PROGRESS");
-        attempt.setStartedAt(LocalDateTime.now());
+        attempt.setStartedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
         return candidateAssessmentRepository.save(attempt);
     }
@@ -60,9 +61,9 @@ public class EvaluationService {
         int timeLimitMinutes = attempt.getAssessment().getTimeLimitMinutes();
         LocalDateTime deadline = attempt.getStartedAt().plusMinutes(timeLimitMinutes);
 
-        if (LocalDateTime.now().isAfter(deadline.plusMinutes(2))) {
+        if (LocalDateTime.now(ZoneId.of("UTC")).isAfter(deadline.plusMinutes(2))) {
             attempt.setStatus("COMPLETED");
-            attempt.setSubmittedAt(LocalDateTime.now());
+            attempt.setSubmittedAt(LocalDateTime.now(ZoneId.of("UTC")));
             attempt.setTotalScore(0);
             return candidateAssessmentRepository.save(attempt);
         }
@@ -98,7 +99,7 @@ public class EvaluationService {
 
         attempt.setTotalScore(totalScoreCalculated);
         attempt.setStatus("COMPLETED");
-        attempt.setSubmittedAt(LocalDateTime.now());
+        attempt.setSubmittedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
         return candidateAssessmentRepository.save(attempt);
     }
